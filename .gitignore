@@ -1,0 +1,6 @@
+*.pyc
+db.sqlite3
+*.caffemodel
+.idea
+/face/face_model.caffemodel
+/face/features.txt
