@@ -108,8 +108,39 @@ def predict(d1, d2, threshold=0.9396):
     output = net.forward()
     features = output["fc5"]
     d = distance.cosine_distnace(features[0], features[1])
-    if d>=threshold:
+    if d >= threshold:
         print "same person"
     else:
         print "diff person"
+
+def generate(totals=50, threshold=0.9396, features_source="face/features.txt"):
+    with open(features_source) as f:
+        features = [line.strip("\n").split(" ") for line in f.readlines()]
+    s = []
+    _same = {}
+    _diff = {}
+    for i in range(int(totals/2)):
+        while True:
+            x1 = random.randint(0, len(features)-1)
+            x2 = random.randint(0, len(features)-1)
+            if not (x1, x2) in _same and features[x1][0] == features[x2][0]:
+                _same[(x1, x2)] = ''
+                break
+        while True:
+            x1 = random.randint(0, len(features)-1)
+            x2 = random.randint(0, len(features)-1)
+            if not (x1, x2) in _diff and features[x1][0] != features[x2][0]:
+                _diff[(x1, x2)] = ''
+                break
+    _all = _same.keys()+_diff.keys()
+    for i, _one in enumerate(_all):
+        (s1, s2) = _one
+        im1 = "/".join(features[s1][:2])
+        im2 = "/".join(features[s2][:2])
+        rr = "是" if features[s1][0] == features[s2][0] else "否"
+        d = distance.cosine_distnace(np.array(list(map(float, features[s1][2:]))),
+                                    np.array(list(map(float, features[s2][2:]))))
+        pr = "是" if d >= threshold else "否"
+        s.append([i+1, im1, im2, rr, pr])
+    return s
 
