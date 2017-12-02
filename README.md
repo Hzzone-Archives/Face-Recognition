@@ -95,6 +95,6 @@ mtcnn分为三个阶段:
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20170110100232912.jpg">
 </div>
-### 参考文献
-1. 《Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks》, [arxiv地址]( https://arxiv.org/abs/1604.02878v1) 
+### 参考文献    
+1. 《Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks》, [arxiv地址](https://arxiv.org/abs/1604.02878v1)  
 2. 《A Discriminative Feature Learning Approach for Deep Face Recognition》, [eccv地址](https://link.springer.com/chapter/10.1007/978-3-319-46478-7_31)
