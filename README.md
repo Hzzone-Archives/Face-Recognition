@@ -30,7 +30,7 @@ mtcnn分为三个阶段:
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926111307081.jpg">
 </div>  
-
+<br>
     1. stage1: 在构建图像金字塔的基础上，利用`fully convolutional network`来进行检测，同时利用`boundingbox regression`和NMS来进行修正。（注意：这里的全卷积网络与`R-CNN`里面带反卷积的网络是不一样的，这里只是指只有卷积层，可以接受任意尺寸的输入，靠网络`stride`来自动完成滑窗）
 
     2. stage2: 将通过stage1的所有窗口输入作进一步判断，同时也要做`boundingbox regression`和NMS。
@@ -63,7 +63,6 @@ mtcnn分为三个阶段:
 该层比R-Net层又多了一层卷基层，所以处理的结果会更加精细。作用和R-Net层作用一样。但是该层对人脸区域进行了更多的监督，同时还会输出5个地标`（landmark）`.
 
 ### center_loss   
-<br>
 对于`center_loss`算法，主要是在`softmax_loss`的基础上，通过对训练集的每个类别在特征空间分别维护一个类中心，在训练过程中，增加样本经过网络映射后在特征空间与类中心的距离约束，从而兼顾类内聚合与类间分离。
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20161123184329434.jpg">
