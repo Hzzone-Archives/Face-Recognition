@@ -12,7 +12,7 @@
 3. [mtcnn face detection and alignment](https://github.com/kpzhang93/MTCNN_face_detection_alignment)
 
 ## 基于深度学习的人脸检测、识别
-###	项目名称
+### 项目名称
 基于深度学习的人脸检测、识别
 ### 问题描述
 首先用`mtcnn(参考文献1)`对人脸进行对齐和检测，也就是从数据集中将人脸抠出来。然后用 `softmax_loss+center_loss(参考文献2)`进行人脸识别。
@@ -22,7 +22,7 @@
 测试集: [Labeled Faces in the Wild Home]( http://vis-www.cs.umass.edu/lfw/)。
 
 
-###	算法选择和原理描述
+### 算法选择和原理描述
 我们主要选择的算法是`mtcnn`和`center_loss`。
 #### mtcnn
 * 算法流程
@@ -38,27 +38,32 @@ mtcnn分为三个阶段:
     3. stage3: 和stage2相似，只不过增加了更强的约束：5个人脸关键点。
 
 * 网络结构描述
-    * Proposal Net(P-Net)
+
+* Proposal Net(P-Net)
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926113319266.jpg">
 </div>  
+    
+该网络结构主要获得了人脸区域的候选窗口和边界框的回归向量。并用该边界框做回归，对候选窗口进行校准，然后通过`非极大值抑制(NMS)`来合并高度重叠的候选框。 
 
-该网络结构主要获得了人脸区域的候选窗口和边界框的回归向量。并用该边界框做回归，对候选窗口进行校准，然后通过`非极大值抑制（NMS）`来合并高度重叠的候选框。
-    * Refine Network(R-Net)
+* Refine Network(R-Net)
+
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926113327249.jpg">
 </div>  
 
 该网络结构还是通过边界框回归和NMS来去掉那些`false-positive`区域。
 只是由于该网络结构和P-Net网络结构有差异，多了一个全连接层，所以会取得更好的抑制false-positive的作用。
-    * Output Network(O-Net)
+
+* Output Network(O-Net)
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926113334297.jpg">
-</div>  
+</div>      
 
-该层比R-Net层又多了一层卷基层，所以处理的结果会更加精细。作用和R-Net层作用一样。但是该层对人脸区域进行了更多的监督，同时还会输出5个地标`（landmark）`。
+该层比R-Net层又多了一层卷基层，所以处理的结果会更加精细。作用和R-Net层作用一样。但是该层对人脸区域进行了更多的监督，同时还会输出5个地标`（landmark）`.
 
-#### center_loss
+### center_loss   
+<br>
 对于`center_loss`算法，主要是在`softmax_loss`的基础上，通过对训练集的每个类别在特征空间分别维护一个类中心，在训练过程中，增加样本经过网络映射后在特征空间与类中心的距离约束，从而兼顾类内聚合与类间分离。
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20161123184329434.jpg">
