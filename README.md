@@ -29,7 +29,8 @@
 mtcnn分为三个阶段: 
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926111307081.jpg">
-</div>
+</div>  
+
     1. stage1: 在构建图像金字塔的基础上，利用`fully convolutional network`来进行检测，同时利用`boundingbox regression`和NMS来进行修正。（注意：这里的全卷积网络与`R-CNN`里面带反卷积的网络是不一样的，这里只是指只有卷积层，可以接受任意尺寸的输入，靠网络`stride`来自动完成滑窗）
 
     2. stage2: 将通过stage1的所有窗口输入作进一步判断，同时也要做`boundingbox regression`和NMS。
@@ -40,45 +41,52 @@ mtcnn分为三个阶段:
     * Proposal Net(P-Net)
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926113319266.jpg">
-</div>
+</div>  
+
 该网络结构主要获得了人脸区域的候选窗口和边界框的回归向量。并用该边界框做回归，对候选窗口进行校准，然后通过`非极大值抑制（NMS）`来合并高度重叠的候选框。
     * Refine Network(R-Net)
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926113327249.jpg">
-</div>
+</div>  
+
 该网络结构还是通过边界框回归和NMS来去掉那些`false-positive`区域。
 只是由于该网络结构和P-Net网络结构有差异，多了一个全连接层，所以会取得更好的抑制false-positive的作用。
     * Output Network(O-Net)
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20160926113334297.jpg">
-</div>
+</div>  
+
 该层比R-Net层又多了一层卷基层，所以处理的结果会更加精细。作用和R-Net层作用一样。但是该层对人脸区域进行了更多的监督，同时还会输出5个地标`（landmark）`。
 
 #### center_loss
 对于`center_loss`算法，主要是在`softmax_loss`的基础上，通过对训练集的每个类别在特征空间分别维护一个类中心，在训练过程中，增加样本经过网络映射后在特征空间与类中心的距离约束，从而兼顾类内聚合与类间分离。
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-20161123184329434.jpg">
-</div>
+</div>  
+
 整体流程就是读取输入的图像，然后做个前向传播，应用`softmax_loss+center_loss`学习到`Discriminative Features`，然后进行标签的预测。
 `softmaxloss`可以实现将2个类别分开，`center_loss`可以实现减少类类距离，增加类间距离的效果，有点类似，线性判别分析`LDA（Linear Discriminant Analysis）`的思想。在效果上优于`contrastive_loss`和`triplet_loss`，解决了这2个方法在采样问题中的trick。
 
 * softmax_loss如下:
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-7020452-9b93ee81d1626ad6.png">
-</div>
+</div>  
+
 * centerloss:
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-7020452-c0646ba0cd11370d.png">
-</div>
+</div>  
+
 * 实验表明只使用centerloss效果很一般，所以一般是将centerloss与softmax结合起来,引入参数lambda。
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-7020452-a5d7d5f868a9b9b4.png">
-</div>
+</div>  
+
 * 总体结构如下:
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-7020452-c205b2b2c129b6b7.png">
-</div>
-![]()
+</div>  
+
 * 算法过程:
 <div align="center">
     <img src="http://omoitwcai.bkt.clouddn.com/2017-12-02-7020452-148695f75dbebb04.png">
