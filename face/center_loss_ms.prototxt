@@ -1,19 +1,35 @@
 input: "data"
-input_dim: 1
+input_dim: 100
 input_dim: 3
 input_dim: 112
 input_dim: 96
 layer {
+  name: "flip_data"
+  type: "Flip"
+  bottom: "data"
+  top: "flip_data"
+}
+layer {
+  name: "concat_data"
+  type: "Concat"
+  bottom: "data"
+  bottom: "flip_data"
+  top: "concat_data"
+  concat_param{
+    axis: 0
+  }
+}
+layer {
   name: "conv1a"
   type: "Convolution"
-  bottom: "data"
+  bottom: "concat_data"
   top: "conv1a"
   param {
     lr_mult: 1
     decay_mult: 1
   }
   param {
-    lr_mult: 2
+    lr_mult: 1
     decay_mult: 0
   }
   convolution_param {
@@ -45,7 +61,7 @@ layer {
     decay_mult: 1
   }
   param {
-    lr_mult: 2
+    lr_mult: 1
     decay_mult: 0
   }
   convolution_param {
@@ -87,22 +103,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 64
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -121,22 +131,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 64
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -166,7 +170,7 @@ layer {
     decay_mult: 1
   }
   param {
-    lr_mult: 2
+    lr_mult: 1
     decay_mult: 0
   }
   convolution_param {
@@ -208,22 +212,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 128
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -242,22 +240,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 128
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -286,22 +278,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 128
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -320,22 +306,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 128
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -366,7 +346,7 @@ layer {
     decay_mult: 1
   }
   param {
-    lr_mult: 2
+    lr_mult: 1
     decay_mult: 0
   }
   convolution_param {
@@ -408,22 +388,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -442,22 +416,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -486,22 +454,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -520,22 +482,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -564,22 +520,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -598,22 +548,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -642,22 +586,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -676,22 +614,16 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
+    bias_term: false
     weight_filler {
       type: "gaussian"
       std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
+      
     }
   }
 }
@@ -720,10 +652,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
@@ -732,11 +660,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -754,10 +680,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 256
     kernel_size: 3
@@ -766,11 +688,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -799,7 +719,7 @@ layer {
     decay_mult: 1
   }
   param {
-    lr_mult: 2
+    lr_mult: 1
     decay_mult: 0
   }
   convolution_param {
@@ -808,6 +728,7 @@ layer {
     stride: 1
     weight_filler {
       type: "xavier"
+      
     }
     bias_filler {
       type: "constant"
@@ -841,10 +762,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 512
     kernel_size: 3
@@ -853,11 +770,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -875,10 +790,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 512
     kernel_size: 3
@@ -887,11 +798,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -919,10 +828,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 512
     kernel_size: 3
@@ -931,11 +836,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -953,10 +856,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 512
     kernel_size: 3
@@ -965,11 +864,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -997,10 +894,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 512
     kernel_size: 3
@@ -1009,11 +902,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -1031,10 +922,6 @@ layer {
     lr_mult: 1
     decay_mult: 1
   }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
   convolution_param {
     num_output: 512
     kernel_size: 3
@@ -1043,11 +930,9 @@ layer {
     weight_filler {
       type: "gaussian"
       std: 0.01
+      
     }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
+    bias_term: false
   }
 }
 layer {
@@ -1076,7 +961,7 @@ layer {
     decay_mult: 1
   }
   param {
-    lr_mult: 2
+    lr_mult: 1
     decay_mult: 0
   }
   inner_product_param {
@@ -1090,3 +975,45 @@ layer {
     }
   }
 }
+
+layer {
+  name: "slice_fc5"
+  type: "Slice"
+  bottom: "fc5"
+  top: "fc5_orig"
+  top: "fc5_mirror"
+  slice_param {
+    axis: 0
+  }
+}
+layer {
+  name: "eltmax_fc5"
+  type: "Eltwise"
+  bottom: "fc5_orig"
+  bottom: "fc5_mirror"
+  top: "eltmax_fc5"
+  eltwise_param { 
+    operation: MAX
+  }
+  concat_param {
+    axis: 1
+  }
+}
+#layer {
+#  bottom: "eltmax_fc5"
+#  top: "eltmax_fc5"
+#  name: "bn_eltmax_fc5"
+#  type: "BatchNorm"
+#  batch_norm_param {
+#    #disable_variance: true
+#  }
+#}
+#layer {
+#  name: "normalize1"
+#  type: "Normalize"
+#  bottom: "eltmax_fc5"
+#  top: "norm1"
+#  normalize_param {
+#    normalize_type: "L2"
+#  }
+#}

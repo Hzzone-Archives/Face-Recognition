@@ -2,7 +2,8 @@
 import numpy as np
 import os
 # caffe_root = '/home/hzzone/caffe'  # this file is expected to be in {caffe_root}/examples/siamese
-caffe_root = '/Users/HZzone/caffe'  # this file is expected to be in {caffe_root}/examples/siamese
+# caffe_root = '/Users/HZzone/caffe'  # this file is expected to be in {caffe_root}/examples/siamese
+caffe_root = '/Users/HZzone/caffe-windows'  # this file is expected to be in {caffe_root}/examples/siamese
 import sys
 sys.path.insert(0, os.path.join(caffe_root, 'python'))
 import caffe
@@ -93,7 +94,7 @@ def output_features(data_source, caffemodel, deploy):
             data[0] = np.transpose(cv2.imread(sample[-1]), (2, 0, 1))
             net.blobs['data'].data[...] = data
             output = net.forward()
-            features = output["fc5"][0]
+            features = output["eltmax_fc5"][0]
             line = "%s %s %s\n" % (samples[index][0], samples[index][1], " ".join(map(str, features.tolist())))
             f.writelines(line)
             print index, samples[index][2]
@@ -144,3 +145,7 @@ def generate(totals=50, threshold=0.9396, features_source="face/features.txt"):
         s.append([i+1, im1, im2, rr, pr])
     return s
 
+if __name__ == "__main__":
+    # output_features("../static/lfw-aligned", "./face_model.caffemodel", "./face_deploy.prototxt")
+    # output_features("../static/lfw-aligned", "./center_loss_ms.caffemodel", "./center_loss_ms.prototxt")
+    plot_accuracy("./features.txt", totals=1000)
