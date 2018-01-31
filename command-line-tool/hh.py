@@ -458,18 +458,18 @@ def predict(im1, im2, threshold):
     return is_same_person
 
 if __name__ == "__main__":
-    # if len(sys.argv)!=3:
-    #     print "请输入两张图片的路径"
-    #     exit(1)
-    # imgpath1 = sys.argv[1]
-    # imgpath2 = sys.argv[2]
-    # if not (os.path.isfile(imgpath1) and os.path.isfile(imgpath2)):
-    #     print "路径错误"
-    #     exit(1)
+    if len(sys.argv)!=3:
+        print "请输入两张图片的路径"
+        exit(1)
+    imgpath1 = sys.argv[1]
+    imgpath2 = sys.argv[2]
+    if not (os.path.isfile(imgpath1) and os.path.isfile(imgpath2)):
+        print "路径错误"
+        exit(1)
 
 
-    imgpath1 = "./Jen_Bice_0001.jpg"
-    imgpath2 = "./Jennifer_Capriati_0001.jpg"
+    # imgpath1 = "./Jen_Bice_0001.jpg"
+    # imgpath2 = "./Jennifer_Capriati_0001.jpg"
     ### initial net
     caffe_model_path = "./model"
     caffe.set_mode_cpu()
