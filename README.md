@@ -1,3 +1,23 @@
+### Face Recognition Commandline Tool
+![](command-line-tool/preview.png)
+#### Requirements
+you should have octave installed and python package below:
+```
+cv2
+numpy
+matplotlib
+oct2py
+```
+for octave you also need to install the image package which I have provied here. In octave, run ```pkg install image-2.6.2.tar.gz``` to install this package.   
+you should also have compiled caffe python interface.   
+Run this script as:
+```
+python hh.py img_path1 img_path2
+```
+the preview image, the 1st line of which is the mtcnn face detection, the 2nd line is the aligned image(align.m which need octave otherwise you don't have matlab). 
+
+
+
 ### Face Recognition
 #### Preview:    
 <div align="center">

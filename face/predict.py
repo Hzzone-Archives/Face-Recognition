@@ -92,9 +92,9 @@ def output_features(data_source, caffemodel, deploy):
     with open("features.txt", "w") as f:
         for index, sample in enumerate(samples):
             data[0] = np.transpose(cv2.imread(sample[-1]), (2, 0, 1))
-            net.blobs['data'].data[...] = data
+            net.blobs['concat_data'].data[...] = data - 128
             output = net.forward()
-            features = output["eltmax_fc5"][0]
+            features = output["fc5"][0]
             line = "%s %s %s\n" % (samples[index][0], samples[index][1], " ".join(map(str, features.tolist())))
             f.writelines(line)
             print index, samples[index][2]

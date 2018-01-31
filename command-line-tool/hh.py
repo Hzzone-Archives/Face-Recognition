@@ -5,6 +5,9 @@ import caffe
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt  
+
+
 
 ### 具体流程
 '''
@@ -191,7 +194,7 @@ def drawBoxes(im, boxes):
     x2 = boxes[:,2]
     y2 = boxes[:,3]
     for i in range(x1.shape[0]):
-        cv2.rectangle(im, (int(x1[i]), int(y1[i])), (int(x2[i]), int(y2[i])), (0,255,0), 1)
+        cv2.rectangle(im, (int(x1[i]), int(y1[i])), (int(x2[i]), int(y2[i])), (0,0,255), 3)
     return im
 
 
@@ -374,40 +377,131 @@ def detect_face(img, minsize, PNet, RNet, ONet, threshold, fastresize, factor):
     return total_boxes, points
 
 
-def main():
-    imglistfile = "imglist.txt"
+def aligment(img, imgpath):
     ### 人脸最小的大小
     minsize = 20
 
-    caffe_model_path = "./model"
 
     threshold = [0.6, 0.7, 0.7]
     factor = 0.709
-    
+
+    img_matlab = img.copy()
+    tmp = img_matlab[:,:,2].copy()
+    img_matlab[:,:,2] = img_matlab[:,:,0]
+    img_matlab[:,:,0] = tmp
+
+    # check rgb position
+    #tic()
+    boundingboxes, points = detect_face(img_matlab, minsize, PNet, RNet, ONet, threshold, False, factor)
+    #toc()
+    print points.shape
+    print boundingboxes.shape
+    area = np.array(abs(boundingboxes[:,2]-boundingboxes[:,0])*(boundingboxes[:,3]-boundingboxes[:,1]))
+    max_index = area.argmax()
+    initial_img = img.copy()
+    drawBoxes(img, boundingboxes[max_index].reshape(1, -1))
+    # cv2.imshow('xiaoxiongwoaini', img)
+    # cv2.waitKey(0)
+    x1 = boundingboxes[max_index,0]
+    y1 = boundingboxes[max_index,1]
+    x2 = boundingboxes[max_index,2]
+    y2 = boundingboxes[max_index,3]
+    w = x2-x1
+    h = y2-y1
+    max_rect_points = points[max_index].reshape((2,5))
+    print max_rect_points
+
+    from oct2py import octave
+    octave.eval("pkg load image")
+    # imgSize = [112, 96] 
+    # octave.push('imgSize', imgSize)
+    # coord5points = [[30.2946, 65.5318, 48.0252, 33.5493, 62.7299],[51.6963, 51.5014, 71.7366, 92.3655, 92.2041]] 
+    # octave.push('coord5points', coord5points)
+    # facial5points = [[347.32406616, 535.37561035, 415.44692993, 345.96670532, 498.96899414],[406.24920654,435.16409302, 539.11853027,592.89459229 , 617.25360107]] 
+    # octave.push('facial5points', facial5points)
+    # octave.eval("img = imread('%s');"%imgpath) 
+
+    # octave.eval('''Tfm = cp2tform(facial5points', coord5points', 'similarity');''') 
+    # octave.eval('''cropImg = imtransform(img, Tfm, 'XData', [1 imgSize(2)], 'YData', [1 imgSize(1)], 'Size', imgSize);''') 
+    # cropImg = octave.pull('cropImg')
+    cropImg = octave.align(imgpath, max_rect_points)
+    print cropImg.shape
+    cropImg = cv2.cvtColor(cropImg, cv2.COLOR_BGR2RGB);
+
+    # cv2.imshow("小熊好可爱", cropImg)
+    # cv2.waitKey(0)
+    return cropImg
+
+def cosine_distnace(v1, v2):
+    cos = np.dot(v1, v2)/(np.linalg.norm(v1)*np.linalg.norm(v2))
+    return cos
+
+
+def predict(im1, im2, threshold):
+    # cv2.imshow("", im1)
+    # cv2.waitKey(0)
+    # cv2.imshow("", im2)
+    # cv2.waitKey(0)
+    data = np.zeros((2, 3, 112, 96))
+    net.blobs['concat_data'].reshape(2, 3, 112, 96)
+    data[0] = np.transpose(im1, (2, 0, 1))
+    data[1] = np.transpose(im2, (2, 0, 1))
+    net.blobs['concat_data'].data[...] = data - 128
+    features = net.forward()["fc5"]
+    print features.shape
+    print features
+    d = cosine_distnace(features[0], features[1])
+    is_same_person = False
+    print d
+    if d >= threshold:
+        is_same_person = True
+    return is_same_person
+
+if __name__ == "__main__":
+    # if len(sys.argv)!=3:
+    #     print "请输入两张图片的路径"
+    #     exit(1)
+    # imgpath1 = sys.argv[1]
+    # imgpath2 = sys.argv[2]
+    # if not (os.path.isfile(imgpath1) and os.path.isfile(imgpath2)):
+    #     print "路径错误"
+    #     exit(1)
+
+
+    imgpath1 = "./Jen_Bice_0001.jpg"
+    imgpath2 = "./Jennifer_Capriati_0001.jpg"
+    ### initial net
+    caffe_model_path = "./model"
     caffe.set_mode_cpu()
     PNet = caffe.Net(caffe_model_path+"/det1.prototxt", caffe_model_path+"/det1.caffemodel", caffe.TEST)
     RNet = caffe.Net(caffe_model_path+"/det2.prototxt", caffe_model_path+"/det2.caffemodel", caffe.TEST)
     ONet = caffe.Net(caffe_model_path+"/det3.prototxt", caffe_model_path+"/det3.caffemodel", caffe.TEST)
+    net = caffe.Net("./model/center_loss_ms.prototxt", "./model/center_loss_ms.caffemodel", caffe.TEST)
+
+    img1 = cv2.imread(imgpath1)
+    img2 = cv2.imread(imgpath2)
+    aligned_im1 = aligment(img1, imgpath1)
+    aligned_im2 = aligment(img2, imgpath2)
+    flag = predict(aligned_im1, aligned_im2, 0.3889)
+    img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB);
+    img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB);
+    aligned_im1 = cv2.cvtColor(aligned_im1, cv2.COLOR_BGR2RGB);
+    aligned_im2 = cv2.cvtColor(aligned_im2, cv2.COLOR_BGR2RGB);
+    plt.figure(figsize=(8,8),dpi=80)
+    plt.subplot(321)
+    plt.imshow(img1)
+    plt.subplot(322)
+    plt.imshow(img2)
+    plt.subplot(323)
+    plt.imshow(aligned_im1)
+    plt.subplot(324)
+    plt.imshow(aligned_im2)
+    plt.subplot(313)
+    plt.text(0.5, 0.5, u"same person" if flag else u"different person", size=50, rotation=0.,
+         ha="center", va="center")
+    plt.axis('off')
+    plt.draw()
+    plt.show()
 
 
-    with open(imglistfile, 'r') as f:
-        for imgpath in f.readlines():
-            imgpath = imgpath.split('\n')[0]
-            print "######\n", imgpath
-            img = cv2.imread(imgpath)
-            img_matlab = img.copy()
-            tmp = img_matlab[:,:,2].copy()
-            img_matlab[:,:,2] = img_matlab[:,:,0]
-            img_matlab[:,:,0] = tmp
 
-            # check rgb position
-            #tic()
-            boundingboxes, points = detect_face(img_matlab, minsize, PNet, RNet, ONet, threshold, False, factor)
-            #toc()
-            print points
-            img = drawBoxes(img, boundingboxes)
-            cv2.imshow('xiaoxiongwoaini', img)
-            cv2.waitKey(0)
-
-if __name__ == "__main__":
-    main()

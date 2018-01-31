@@ -1,24 +1,8 @@
-input: "data"
-input_dim: 100
+input: "concat_data"
+input_dim: 2
 input_dim: 3
 input_dim: 112
 input_dim: 96
-layer {
-  name: "flip_data"
-  type: "Flip"
-  bottom: "data"
-  top: "flip_data"
-}
-layer {
-  name: "concat_data"
-  type: "Concat"
-  bottom: "data"
-  bottom: "flip_data"
-  top: "concat_data"
-  concat_param{
-    axis: 0
-  }
-}
 layer {
   name: "conv1a"
   type: "Convolution"
@@ -999,21 +983,3 @@ layer {
     axis: 1
   }
 }
-#layer {
-#  bottom: "eltmax_fc5"
-#  top: "eltmax_fc5"
-#  name: "bn_eltmax_fc5"
-#  type: "BatchNorm"
-#  batch_norm_param {
-#    #disable_variance: true
-#  }
-#}
-#layer {
-#  name: "normalize1"
-#  type: "Normalize"
-#  bottom: "eltmax_fc5"
-#  top: "norm1"
-#  normalize_param {
-#    normalize_type: "L2"
-#  }
-#}
