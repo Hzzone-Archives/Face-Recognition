@@ -146,6 +146,5 @@ def generate(totals=50, threshold=0.9396, features_source="face/features.txt"):
     return s
 
 if __name__ == "__main__":
-    # output_features("../static/lfw-aligned", "./face_model.caffemodel", "./face_deploy.prototxt")
-    # output_features("../static/lfw-aligned", "./center_loss_ms.caffemodel", "./center_loss_ms.prototxt")
+    # output_features("../static/lfw-aligned", "../model/center_loss_ms.caffemodel", "../model/center_loss_ms.prototxt")
     plot_accuracy("./features.txt", totals=1000)

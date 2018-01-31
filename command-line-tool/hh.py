@@ -471,12 +471,12 @@ if __name__ == "__main__":
     # imgpath1 = "./Jen_Bice_0001.jpg"
     # imgpath2 = "./Jennifer_Capriati_0001.jpg"
     ### initial net
-    caffe_model_path = "./model"
+    caffe_model_path = "../model"
     caffe.set_mode_cpu()
     PNet = caffe.Net(caffe_model_path+"/det1.prototxt", caffe_model_path+"/det1.caffemodel", caffe.TEST)
     RNet = caffe.Net(caffe_model_path+"/det2.prototxt", caffe_model_path+"/det2.caffemodel", caffe.TEST)
     ONet = caffe.Net(caffe_model_path+"/det3.prototxt", caffe_model_path+"/det3.caffemodel", caffe.TEST)
-    net = caffe.Net("./model/center_loss_ms.prototxt", "./model/center_loss_ms.caffemodel", caffe.TEST)
+    net = caffe.Net("../model/center_loss_ms.prototxt", "../model/center_loss_ms.caffemodel", caffe.TEST)
 
     img1 = cv2.imread(imgpath1)
     img2 = cv2.imread(imgpath2)

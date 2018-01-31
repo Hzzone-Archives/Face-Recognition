@@ -379,7 +379,7 @@ def main():
     ### 人脸最小的大小
     minsize = 20
 
-    caffe_model_path = "./model"
+    caffe_model_path = "../model"
 
     threshold = [0.6, 0.7, 0.7]
     factor = 0.709
